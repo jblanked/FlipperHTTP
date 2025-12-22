@@ -52,4 +52,12 @@ Replace it with the following code snippet:
 - if you're compiling for a Raspberry Pi Pico device: change the `Flash Size` to `2MB (Sketch: 1984KB, FS: 64KB)` (or `4MB (Sketch: 4032KB, FS: 64KB)` if compiling for a Raspberry Pi Pico 2W device) and `CPU Speed` to `200MHz`.
 - if you're compiling for an ESP32 device: change the `Partition Scheme` to `Minimal SPIFFS (... with OTA/190KB SPIFFS)` and `Upload Speed` to `115200`.
 - if you're compiling for the BW16, change `Auto Flash Mode` to `Enable` and `Upload Speed` to `921600`.
-13. Finally, click `Sketch` in the menu, then select `Upload`.
+13. In the `board.hpp` file, set your board type by uncommenting your board definition. For example, for a BW16, the line should look like this:
+```cpp
+#define BOARD_BW16 10        // AI-Thinker BW16 (RTL8720DN) 
+```
+instead of
+```cpp
+// #define BOARD_BW16 10        // AI-Thinker BW16 (RTL8720DN) 
+```
+14. Finally, click `Sketch` in the menu, then select `Upload`.
