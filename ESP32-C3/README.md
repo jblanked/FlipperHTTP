@@ -20,6 +20,6 @@
 16. Click on `FLASH - fast (S3)` to flash the firmware to your ESP32-C3. Wait until the process is complete. If successful, the LED of the ESP32-C3 will flash GREEN three times. If you're using a Xiao ESP32C3 or any other ESP32-C3 without an LED, no LED will flash.
 17. Lastly, on the ESP32-C3, press the RESET button once. Alternatively, you can disconnect and reconnect the board.
 
-You are all set. Here's a video tutorial: https://www.youtube.com/watch?v=AZfbrLKJMpM
+You are all set. Check out these video tutorials if you need help: https://github.com/jblanked/FlipperHTTP/tree/main/Tutorials.md
 
 For wiring information, click [here](https://github.com/jblanked/FlipperHTTP?tab=readme-ov-file#wiring).

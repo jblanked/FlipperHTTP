@@ -23,4 +23,4 @@ There are two installation methods. Choose whichever is the most convenient for 
 3. While holding the `BOOT` button, connect the Raspberry Pi Pico W to your computer using a USB cable.
 4. Drag and drop the downloaded file onto the device. It will automatically reboot and begin running the FlipperHTTP firmware.
 
-You're all set! When you reboot your Pico 2 W, it will run the FlipperHTTP Flash. Here's a video tutorial: https://www.youtube.com/watch?v=rdzKDCjbZ4k
+You're all set! When you reboot your Pico 2 W, it will run the FlipperHTTP Flash. Check out these video tutorials if you need help: https://github.com/jblanked/FlipperHTTP/tree/main/Tutorials.md

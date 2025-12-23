@@ -25,4 +25,4 @@ There are two installation methods. Choose whichever is the most convenient for 
 
 For wiring information, click [here](https://github.com/jblanked/FlipperHTTP?tab=readme-ov-file#wiring).
 
-You're all set! When you reboot your Pico W, it will run the FlipperHTTP Flash. Here's a video tutorial: https://www.youtube.com/watch?v=rdzKDCjbZ4k
+You're all set! When you reboot your Pico W, it will run the FlipperHTTP Flash. Check out these video tutorials if you need help: https://github.com/jblanked/FlipperHTTP/tree/main/Tutorials.md

@@ -10,11 +10,8 @@ Star the repository and [follow me](https://www.github.com/jblanked) to stay upd
 - Other: https://www.jblanked.com/social/
 
 ## Video Tutorials
-- Flashing FlipperHTTP (ESP Terminator): https://www.youtube.com/watch?v=d7ND0tIyBko
-- Flashing FlipperHTTP (ESP Flasher): https://www.youtube.com/watch?v=CoyFrUzKHhI
-- Flashing + Quick Review: https://www.youtube.com/watch?v=ZFYki5xaCBU
-- Talking Sasquatch (Review): https://www.youtube.com/watch?v=jYZkdz664Tg 
-- Using FlipperHTTP apps: https://www.youtube.com/watch?v=xR1ZbpOVTwE
+- JBlanked Flipper Zero Playlist: https://www.youtube.com/playlist?list=PLSRet1BCVgXgSxLgfUyLb-uEdHLNwspYa
+- A collection of video tutorials for FlipperHTTP and related projects: https://github.com/jblanked/FlipperHTTP/tree/main/Tutorials.md
 
 ## Apps That Utilize FlipperHTTP
 The following apps integrate FlipperHTTP to enhance their functionality:
