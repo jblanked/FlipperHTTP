@@ -1,8 +1,8 @@
 ## BW16 Installation
 1. Install the Arduino IDE from https://www.arduino.cc/en/software
 2. Download this repository as a .zip file (available here: https://github.com/jblanked/FlipperHTTP/archive/refs/heads/main.zip)
-3. Unzip the file and change the folder named `src` to `flipper-http`. 
-4. Within the folder, double-click the `flipper-http.ino` file to open it in Arduino IDE.
+3. Unzip the file. 
+4. Within the `src/flipper-http` folder, double-click the `flipper-http.ino` file to open it in Arduino IDE.
 5. Within Arduino IDE, navigate to the `boards.hpp` file and un-comment the `#define BOARD_BW16 10` line.
 6. In Arduino IDE, go to Preferences/Settings and add the following URL to the `Additional Boards Manager URLs` field: `https://github.com/Ameba-AIoT/ameba-arduino-d/raw/dev/Arduino_package/package_realtek_amebad_early_index.json`. Click `OK`.
 7. In `Boards Manager`, search for `realtek` and install the `Realtek Ameba Boards (32-bit ARM Cortex)` package. 
