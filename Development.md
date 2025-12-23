@@ -4,10 +4,10 @@ The firmware was built with the Arduino IDE. Here's how to set it up:
 
 1. Install the Arduino IDE from https://www.arduino.cc/en/software.
 2. Download this repository as a .zip file (available here: https://github.com/jblanked/FlipperHTTP/archive/refs/heads/main.zip).
-3. Unzip the file and change the folder named `src` to `flipper-http`. Within that `flipper-http` folder, double-click the `flipper-http.ino` file to open it in Arduino IDE.
+3. Unzip the file and within that `src/flipper-http` folder, double-click the `flipper-http.ino` file to open it in Arduino IDE.
 4. Go to Preferences/Settings, and add the following to the `Additional Boards Manager URLs` field: 
 ```
-https://github.com/earlephilhower/arduino-pico/releases/download/4.7.1/package_rp2040_index.json,https://github.com/Ameba-AIoT/ameba-arduino-d/raw/dev/Arduino_package/package_realtek_amebad_early_index.json,https://dl.espressif.com/dl/package_esp32_index.json
+https://github.com/earlephilhower/arduino-pico/releases/download/5.4.4/package_rp2040_index.json,https://github.com/Ameba-AIoT/ameba-arduino-d/raw/dev/Arduino_package/package_realtek_amebad_early_index.json,https://dl.espressif.com/dl/package_esp32_index.json
 ```
 
 5. In `Boards Manager`:

@@ -3,12 +3,14 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2025-09-15
+Updated: 2025-12-23
 */
 
 #include "FlipperHTTP.hpp"
 #include "wifi_ap.hpp"
 #include "wifi_deauth.hpp"
+
+#define MAX_CHUNK_SIZE 128
 
 // Load WiFi settings
 bool FlipperHTTP::loadWiFi()
@@ -16,7 +18,6 @@ bool FlipperHTTP::loadWiFi()
     JsonDocument doc;
     if (!storage.deserialize(doc, settingsFilePath))
     {
-        this->uart->println(F("[ERROR] Failed to deserialize JSON from settings file."));
         return false;
     }
 
@@ -270,10 +271,9 @@ bool FlipperHTTP::saveWiFi(const String jsonData)
 
 void FlipperHTTP::sendLargeMessage(WebSocketClient &ws, String message)
 {
-    const int chunkSize = 90;
     int totalLength = message.length();
 
-    if (totalLength <= chunkSize)
+    if (totalLength <= MAX_CHUNK_SIZE)
     {
         // If message is small enough, send normally
         ws.beginMessage(TYPE_TEXT);
@@ -283,9 +283,9 @@ void FlipperHTTP::sendLargeMessage(WebSocketClient &ws, String message)
     }
 
     // Send in chunks
-    for (int i = 0; i < totalLength; i += chunkSize)
+    for (int i = 0; i < totalLength; i += MAX_CHUNK_SIZE)
     {
-        String chunk = message.substring(i, min(i + chunkSize, totalLength));
+        String chunk = message.substring(i, min(i + MAX_CHUNK_SIZE, totalLength));
         ws.beginMessage(TYPE_TEXT);
         ws.print(chunk);
         ws.endMessage();

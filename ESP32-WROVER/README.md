@@ -19,6 +19,6 @@
 16. Click on `FLASH - fast` to flash the firmware to your Developer Board. Wait until the process is complete. If successful, the LED of the Developer Board will flash GREEN three times.
 17. Lastly, on the Developer Board, press the RESET button once.
 
-You are all set. Here's a video tutorial: https://www.youtube.com/watch?v=AZfbrLKJMpM
+You are all set. Check out these video tutorials if you need help: https://github.com/jblanked/FlipperHTTP/tree/main/Tutorials.md
 
 For wiring information, click [here](https://github.com/jblanked/FlipperHTTP?tab=readme-ov-file#wiring).

@@ -1,5 +1,5 @@
 # FlipperHTTP
-An HTTP library for the Flipper Zero, compatible with the WiFi Developer Board, BW16, Raspberry Pi, and other ESP32 devices.
+An HTTP library for the Flipper Zero, compatible with the WiFi Developer Board, BW16, Raspberry Pi, PicoCalc and other ESP32 devices.
 
 Star the repository and [follow me](https://www.github.com/jblanked) to stay updated on new releases and upcoming Flipper apps.
 
@@ -10,18 +10,18 @@ Star the repository and [follow me](https://www.github.com/jblanked) to stay upd
 - Other: https://www.jblanked.com/social/
 
 ## Video Tutorials
-- Flashing FlipperHTTP (ESP Terminator): https://www.youtube.com/watch?v=d7ND0tIyBko
-- Flashing FlipperHTTP (ESP Flasher): https://www.youtube.com/watch?v=CoyFrUzKHhI
-- Flashing + Quick Review: https://www.youtube.com/watch?v=ZFYki5xaCBU
-- Talking Sasquatch (Review): https://www.youtube.com/watch?v=jYZkdz664Tg 
-- Using FlipperHTTP apps: https://www.youtube.com/watch?v=xR1ZbpOVTwE
+- JBlanked Flipper Zero Playlist: https://www.youtube.com/playlist?list=PLSRet1BCVgXgSxLgfUyLb-uEdHLNwspYa
+- A collection of video tutorials for FlipperHTTP and related projects: https://github.com/jblanked/FlipperHTTP/tree/main/Tutorials.md
 
 ## Apps That Utilize FlipperHTTP
 The following apps integrate FlipperHTTP to enhance their functionality:
 
+- **FlipTelegram** - A Telegram client for the Flipper Zero: [https://github.com/jblanked/FlipTelegram](https://github.com/jblanked/FlipTelegram)
+- **FlipperHTTP-App** - The newest FlipperHTTP companion app! Scan and connect to WiFi networks, sync credentials for all FlipperHTTP-enabled apps, and check your WiFi connect status with ease: [https://github.com/jblanked/FlipperHTTP-App](https://github.com/jblanked/FlipperHTTP-App)
+- **FlipMap** - A Flipper Zero app to find Flipper Zero Users: [https://github.com/jblanked/FlipMap](https://github.com/jblanked/FlipMap)
 - **Free Roam** - An open-world 3D multiplayer game: [https://github.com/jblanked/Free-Roam](https://github.com/jblanked/Free-Roam)
 - **FlipSocial** - A social media platform for the Flipper Zero: [https://github.com/jblanked/FlipSocial](https://github.com/jblanked/FlipSocial)
-- **FlipWiFi** - A FlipperHTTP companion app for scanning and saving WiFi networks on your Flipper Zero: [https://github.com/jblanked/FlipWiFi](https://github.com/jblanked/FlipWiFi)
+- **FlipWiFi** - A FlipperHTTP companion app for captive portals, deauthentication attacks, and scanning WiFi networks on your Flipper Zero: [https://github.com/jblanked/FlipWiFi](https://github.com/jblanked/FlipWiFi)
 - **FlipWorld** - An open-world 2D multiplayer game: [https://github.com/jblanked/FlipWorld](https://github.com/jblanked/FlipWorld)
 - **FlipDownloader** - A marketplace for downloading and managing apps and software on your Flipper Zero: [https://github.com/jblanked/FlipDownloader](https://github.com/jblanked/FlipDownloader)
 - **FlipLibrary** - A Flipper Zero app with a dictionary, random facts, and more: [https://github.com/jblanked/FlipLibrary](https://github.com/jblanked/FlipLibrary)
