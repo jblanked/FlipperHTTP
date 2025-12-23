@@ -33,6 +33,6 @@ Here are some tutorials and reviews to help you get started with FlipperHTTP:
 - Transform Your Flipper Zero into a WiFi Device Using PicoCalc!: https://youtu.be/3YHwalnAcbc (FlipperHTTP on PicoCalc)
 - How To Connect Your WiFi Devboard To The Video Game Module: https://youtu.be/iNwOJzZCplc (Video Game Module tutorial)
 - Raspberry Pi Pico W FlipperHTTP Installation: https://www.youtube.com/watch?v=rdzKDCjbZ4k
-
+- BW16 FlipperHTTP Installation: https://www.youtube.com/watch?v=UvxAEcqSrqI
 
 
