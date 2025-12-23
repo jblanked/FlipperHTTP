@@ -75,7 +75,7 @@ Change Log:
 #include "storage.hpp"
 
 #define BAUD_RATE 115200
-#define FLIPPER_HTTP_VERSION "2.1.1"
+#define FLIPPER_HTTP_VERSION "2.1.2"
 
 class FlipperHTTP
 {
