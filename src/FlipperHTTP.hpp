@@ -3,7 +3,7 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2025-12-22
+Updated: 2025-12-23
 
 Change Log:
 - 2024-09-30: Initial commit
@@ -59,6 +59,8 @@ Change Log:
     - Increased MAX_CHUNK_SIZE to 128 bytes
     - Bumped rp2040 package to 5.4.4
     - Bumped version to 2.1.2
+- 2025-12-23:
+    - Removed deserialize failure warning on empty storage
 */
 #pragma once
 #include "certs.hpp"
