@@ -18,7 +18,6 @@ bool FlipperHTTP::loadWiFi()
     JsonDocument doc;
     if (!storage.deserialize(doc, settingsFilePath))
     {
-        this->uart->println(F("[ERROR] Failed to deserialize JSON from settings file."));
         return false;
     }
 
