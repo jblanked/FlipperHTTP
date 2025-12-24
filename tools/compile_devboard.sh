@@ -58,7 +58,7 @@ rm -f "$BOARDS_FILE.tmp"
 echo "Compiling sketch..."
 arduino-cli compile \
     --fqbn "$FQBN" \
-    --build-property "build.extra_flags=-DBOARD_WIFI_DEV=0 -DESP32" \
+    --build-property "build.extra_flags=-DBOARD_WIFI_DEV=0 -DESP32 -DCORE_DEBUG_LEVEL=0 -Os" \
     --board-options "$BUILD_PROPS" \
     --output-dir "$OUTPUT_DIR" \
     "$SRC_DIR"

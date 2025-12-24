@@ -61,6 +61,8 @@ Change Log:
     - Bumped version to 2.1.2
 - 2025-12-23:
     - Removed deserialize failure warning on empty storage
+    - Removed `WiFi.disconnect` before connecting to a new network
+    - Bumped version to 2.1.3
 */
 #pragma once
 #include "certs.hpp"
@@ -75,7 +77,7 @@ Change Log:
 #include "storage.hpp"
 
 #define BAUD_RATE 115200
-#define FLIPPER_HTTP_VERSION "2.1.2"
+#define FLIPPER_HTTP_VERSION "2.1.3"
 
 class FlipperHTTP
 {
