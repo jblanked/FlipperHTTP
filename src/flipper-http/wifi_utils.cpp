@@ -89,6 +89,9 @@ bool WiFiUtils::connectHelper(const char *ssid, const char *password, bool isAP)
 #endif
     if (!isAP)
     {
+#ifdef BOARD_ESP32_S3
+        WiFi.setAutoReconnect(false);
+#endif
         int i = 0;
         while (!this->isConnected() && i < 20)
         {

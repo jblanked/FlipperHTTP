@@ -63,6 +63,7 @@ Change Log:
     - Removed deserialize failure warning on empty storage
     - Removed `WiFi.disconnect` before connecting to a new network
     - Bumped version to 2.1.3
+    - Set `WiFi.setAutoReconnect(false)` to prevent automatic reconnection attempts (ESP32s3 only)
 */
 #pragma once
 #include "certs.hpp"
