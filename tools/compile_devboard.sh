@@ -19,7 +19,7 @@ export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS="https://github.com/earlephilhower/
 
 # Board settings for WiFi Developer Board (ESP32S2 Dev Module)
 FQBN="esp32:esp32:esp32s2"
-BUILD_PROPS="PartitionScheme=min_spiffs,UploadSpeed=115200"
+BUILD_PROPS="PartitionScheme=min_spiffs,UploadSpeed=115200,EraseFlash=all"
 
 echo "=== FlipperHTTP Compiler for WiFi Developer Board (ESP32S2) ==="
 echo ""
