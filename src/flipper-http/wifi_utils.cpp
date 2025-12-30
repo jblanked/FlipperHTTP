@@ -89,7 +89,7 @@ bool WiFiUtils::connectHelper(const char *ssid, const char *password, bool isAP)
 #endif
     if (!isAP)
     {
-#ifdef BOARD_ESP32_S3
+#if !defined(BOARD_BW16) && !defined(BOARD_PICO_W) && !defined(BOARD_PICO_2W) && !defined(BOARD_VGM) && !defined(BOARD_PICOCALC_W) && !defined(BOARD_PICOCALC_2W)
         WiFi.setAutoReconnect(false);
 #endif
         int i = 0;
