@@ -3,7 +3,7 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2025-12-23
+Updated: 2025-12-30
 */
 
 #include "FlipperHTTP.hpp"
@@ -578,12 +578,27 @@ bool FlipperHTTP::readSerialSettings(String receivedData, bool connectAfterSave)
         return false;
     }
 
-    // Attempt to reconnect with new settings
-    if (connectAfterSave && this->wifi.connect(loaded_ssid, loaded_pass))
+    if (connectAfterSave)
     {
-        this->uart->println(F("[SUCCESS] Connected to the new Wifi network."));
+        if (this->wifi.isConnected())
+        {
+            this->wifi.disconnect();
+        }
+
+        // Attempt to reconnect with new settings
+        if (this->wifi.connect(loaded_ssid, loaded_pass))
+        {
+            this->uart->println(F("[SUCCESS] WiFi settings saved and connected."));
+            return true;
+        }
+        else
+        {
+            this->uart->println(F("[ERROR] WiFi settings saved but failed to connect."));
+            return false;
+        }
     }
 
+    this->uart->println(F("[SUCCESS] WiFi settings saved."));
     return true;
 }
 
@@ -738,14 +753,7 @@ void FlipperHTTP::loop()
             jsonData.trim(); // Remove any leading/trailing whitespace
 
             // Parse and save the settings
-            if (this->readSerialSettings(jsonData, true))
-            {
-                this->uart->println(F("[SUCCESS] Wifi settings saved."));
-            }
-            else
-            {
-                this->uart->println(F("[ERROR] Failed to save Wifi settings."));
-            }
+            this->readSerialSettings(jsonData, true);
         }
         // Handle [WIFI/STATUS] command
         else if (_data == "[WIFI/STATUS]")
