@@ -3,7 +3,7 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2025-12-23
+Updated: 2025-12-30
 
 Change Log:
 - 2024-09-30: Initial commit
@@ -64,6 +64,11 @@ Change Log:
     - Removed `WiFi.disconnect` before connecting to a new network
     - Bumped version to 2.1.3
     - Set `WiFi.setAutoReconnect(false)` to prevent automatic reconnection attempts (ESP32s3 only)
+- 2025-12-30:
+    - Set `WiFi.setAutoReconnect(false)` to prevent automatic reconnection attempts (ESP32 variants)
+    - Updated readSerialSettings to disconnect before reconnecting with new settings
+    - Added [BOARD/NAME] command to get the board name
+    - Bumped version to 2.1.4
 */
 #pragma once
 #include "certs.hpp"
@@ -78,7 +83,7 @@ Change Log:
 #include "storage.hpp"
 
 #define BAUD_RATE 115200
-#define FLIPPER_HTTP_VERSION "2.1.3"
+#define FLIPPER_HTTP_VERSION "2.1.4"
 
 class FlipperHTTP
 {

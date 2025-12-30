@@ -3,7 +3,7 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2025-12-23
+Updated: 2025-12-30
 */
 
 #include "FlipperHTTP.hpp"
@@ -578,12 +578,27 @@ bool FlipperHTTP::readSerialSettings(String receivedData, bool connectAfterSave)
         return false;
     }
 
-    // Attempt to reconnect with new settings
-    if (connectAfterSave && this->wifi.connect(loaded_ssid, loaded_pass))
+    if (connectAfterSave)
     {
-        this->uart->println(F("[SUCCESS] Connected to the new Wifi network."));
+        if (this->wifi.isConnected())
+        {
+            this->wifi.disconnect();
+        }
+
+        // Attempt to reconnect with new settings
+        if (this->wifi.connect(loaded_ssid, loaded_pass))
+        {
+            this->uart->println(F("[SUCCESS] WiFi settings saved and connected."));
+            return true;
+        }
+        else
+        {
+            this->uart->println(F("[ERROR] WiFi settings saved but failed to connect."));
+            return false;
+        }
     }
 
+    this->uart->println(F("[SUCCESS] WiFi settings saved."));
     return true;
 }
 
@@ -640,7 +655,7 @@ void FlipperHTTP::loop()
         // print the available commands
         if (_data.startsWith("[LIST]"))
         {
-            this->uart->println(F("[LIST], [PING], [REBOOT], [WIFI/IP], [WIFI/SCAN], [WIFI/SAVE], [WIFI/CONNECT], [WIFI/DISCONNECT], [WIFI/LIST], [GET], [GET/HTTP], [POST/HTTP], [PUT/HTTP], [DELETE/HTTP], [GET/BYTES], [POST/BYTES], [PARSE], [PARSE/ARRAY], [LED/ON], [LED/OFF], [IP/ADDRESS], [WIFI/AP], [VERSION], [DEAUTH], [WIFI/STATUS]"));
+            this->uart->println(F("[LIST], [PING], [REBOOT], [WIFI/IP], [WIFI/SCAN], [WIFI/SAVE], [WIFI/CONNECT], [WIFI/DISCONNECT], [WIFI/LIST], [GET], [GET/HTTP], [POST/HTTP], [PUT/HTTP], [DELETE/HTTP], [GET/BYTES], [POST/BYTES], [PARSE], [PARSE/ARRAY], [LED/ON], [LED/OFF], [IP/ADDRESS], [WIFI/AP], [VERSION], [DEAUTH], [WIFI/STATUS], [WIFI/SSID], [BOARD/NAME]"));
         }
         // handle [LED/ON] command
         else if (_data.startsWith("[LED/ON]"))
@@ -738,14 +753,7 @@ void FlipperHTTP::loop()
             jsonData.trim(); // Remove any leading/trailing whitespace
 
             // Parse and save the settings
-            if (this->readSerialSettings(jsonData, true))
-            {
-                this->uart->println(F("[SUCCESS] Wifi settings saved."));
-            }
-            else
-            {
-                this->uart->println(F("[ERROR] Failed to save Wifi settings."));
-            }
+            this->readSerialSettings(jsonData, true);
         }
         // Handle [WIFI/STATUS] command
         else if (_data == "[WIFI/STATUS]")
@@ -771,6 +779,42 @@ void FlipperHTTP::loop()
             {
                 this->uart->println(F("[ERROR] Not connected to WiFi."));
             }
+        }
+        // Handle [BOARD/NAME] command
+        else if (_data == "[BOARD/NAME]")
+        {
+            // board name
+#if defined(BOARD_WIFI_DEV)
+            this->uart->println(F("WiFi Developer Board"));
+#elif defined(BOARD_ESP32_C6)
+            this->uart->println(F("ESP32-C6"));
+#elif defined(BOARD_ESP32_CAM)
+            this->uart->println(F("ESP32-Cam"));
+#elif defined(BOARD_ESP32_S3)
+            this->uart->println(F("ESP32-S3"));
+#elif defined(BOARD_ESP32_WROOM)
+            this->uart->println(F("ESP32-WROOM"));
+#elif defined(BOARD_ESP32_WROVER)
+            this->uart->println(F("ESP32-WROVER"));
+#elif defined(BOARD_PICO_W)
+            this->uart->println(F("Pico W"));
+#elif defined(BOARD_PICO_2W)
+            this->uart->println(F("Pico 2W"));
+#elif defined(BOARD_VGM)
+            this->uart->println(F("Video Game Module"));
+#elif defined(BOARD_ESP32_C3)
+            this->uart->println(F("ESP32-C3"));
+#elif defined(BOARD_BW16)
+            this->uart->println(F("BW16"));
+#elif defined(BOARD_ESP32_C5)
+            this->uart->println(F("ESP32-C5"));
+#elif defined(BOARD_PICOCALC_W)
+            this->uart->println(F("PicoCalc W"));
+#elif defined(BOARD_PICOCALC_2W)
+            this->uart->println(F("PicoCalc 2W"));
+#else
+            this->uart->println(F("Unknown Board"));
+#endif
         }
         // Handle [WIFI/CONNECT] command
         else if (_data == "[WIFI/CONNECT]")

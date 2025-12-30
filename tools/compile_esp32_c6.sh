@@ -13,7 +13,7 @@ OUTPUT_DIR="$PROJECT_DIR/ESP32-C6"
 export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS="https://github.com/earlephilhower/arduino-pico/releases/download/5.4.4/package_rp2040_index.json https://github.com/Ameba-AIoT/ameba-arduino-d/raw/dev/Arduino_package/package_realtek_amebad_early_index.json https://dl.espressif.com/dl/package_esp32_index.json"
 
 FQBN="esp32:esp32:esp32c6"
-BUILD_PROPS="PartitionScheme=min_spiffs,UploadSpeed=115200"
+BUILD_PROPS="PartitionScheme=min_spiffs,UploadSpeed=115200,EraseFlash=all"
 BOARD_DEF="BOARD_ESP32_C6"
 BOARD_VAL="1"
 
