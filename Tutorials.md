@@ -1,4 +1,4 @@
-# Tutotorials and Reviews
+# Tutorials and Reviews
 
 Here are some tutorials and reviews to help you get started with FlipperHTTP:
 
