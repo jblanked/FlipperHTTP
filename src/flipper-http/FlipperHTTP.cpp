@@ -3,7 +3,7 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2026-03-19
+Updated: 2026-03-20
 */
 
 #include "FlipperHTTP.hpp"
@@ -317,6 +317,8 @@ void FlipperHTTP::setup()
     else
     {
         this->loadWiFi(); // Load WiFi settings
+        String ledState = storage.read("/led.txt");
+        this->use_led = (ledState == "off") ? false : true;
     }
 #ifndef BOARD_BW16
     this->client.setCACert(root_ca);
@@ -609,7 +611,10 @@ void FlipperHTTP::loop()
     // Check if there's incoming serial data
     if (this->uart->available() > 0)
     {
-        this->led.on();
+        if (this->use_led)
+        {
+            this->led.on();
+        }
 
         // Read the incoming serial data until newline
         String _data = this->uart->readSerialLine();
@@ -623,11 +628,17 @@ void FlipperHTTP::loop()
         // Send response back to Flipper
         this->uart->println(_response);
 
-        this->led.off();
+        if (this->use_led)
+        {
+            this->led.off();
+        }
     }
     else if (this->uart_2->available() > 0)
     {
-        this->led.on();
+        if (this->use_led)
+        {
+            this->led.on();
+        }
 
         // Read the incoming serial data until newline
         String _data = this->uart_2->readSerialLine();
@@ -635,7 +646,10 @@ void FlipperHTTP::loop()
         // send to Flipper
         this->uart->println(_data);
 
-        this->led.off();
+        if (this->use_led)
+        {
+            this->led.off();
+        }
     }
 #else
     // Check if there's incoming serial data
@@ -650,7 +664,10 @@ void FlipperHTTP::loop()
             return;
         }
 
-        this->led.on();
+        if (this->use_led)
+        {
+            this->led.on();
+        }
 
         // print the available commands
         if (_data.startsWith("[LIST]"))
@@ -661,11 +678,27 @@ void FlipperHTTP::loop()
         else if (_data.startsWith("[LED/ON]"))
         {
             this->use_led = true;
+            if (storage.write("/led.txt", "on"))
+            {
+                this->uart->println(F("[SUCCESS] LED enabled and state saved."));
+            }
+            else
+            {
+                this->uart->println(F("[ERROR] Failed to save LED state."));
+            }
         }
         // handle [LED/OFF] command
         else if (_data.startsWith("[LED/OFF]"))
         {
             this->use_led = false;
+            if (storage.write("/led.txt", "off"))
+            {
+                this->uart->println(F("[SUCCESS] LED disabled and state saved."));
+            }
+            else
+            {
+                this->uart->println(F("[ERROR] Failed to save LED state."));
+            }
         }
         // handle [VERSION] command
         else if (_data.startsWith("[VERSION]"))
@@ -720,6 +753,7 @@ void FlipperHTTP::loop()
         // Handle [REBOOT] command
         else if (_data.startsWith("[REBOOT]"))
         {
+            this->uart->println(F("Rebooting..."));
             this->use_led = true;
 #if defined(BOARD_PICO_W) || defined(BOARD_PICO_2W) || defined(BOARD_VGM) || defined(BOARD_PICOCALC_W) || defined(BOARD_PICOCALC_2W)
             rp2040.reboot();
