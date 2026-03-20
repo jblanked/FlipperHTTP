@@ -15,7 +15,7 @@ SKETCH_FILE="$SRC_DIR/flipper-http.ino"
 OUTPUT_DIR="$PROJECT_DIR/WiFi Developer Board (ESP32S2)"
 
 # Arduino CLI configuration
-export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS="https://github.com/earlephilhower/arduino-pico/releases/download/5.4.4/package_rp2040_index.json https://github.com/Ameba-AIoT/ameba-arduino-d/raw/dev/Arduino_package/package_realtek_amebad_early_index.json https://dl.espressif.com/dl/package_esp32_index.json"
+export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS="https://github.com/earlephilhower/arduino-pico/releases/download/5.5.1/package_rp2040_index.json https://github.com/Ameba-AIoT/ameba-arduino-d/raw/dev/Arduino_package/package_realtek_amebad_early_index.json https://dl.espressif.com/dl/package_esp32_index.json"
 
 # Board settings for WiFi Developer Board (ESP32S2 Dev Module)
 FQBN="esp32:esp32:esp32s2"

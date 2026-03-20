@@ -10,7 +10,7 @@ SRC_DIR="$PROJECT_DIR/src/flipper-http"
 BOARDS_FILE="$SRC_DIR/boards.hpp"
 OUTPUT_DIR="$PROJECT_DIR/Video Game Module/C++"
 
-export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS="https://github.com/earlephilhower/arduino-pico/releases/download/5.4.4/package_rp2040_index.json https://github.com/Ameba-AIoT/ameba-arduino-d/raw/dev/Arduino_package/package_realtek_amebad_early_index.json https://dl.espressif.com/dl/package_esp32_index.json"
+export ARDUINO_BOARD_MANAGER_ADDITIONAL_URLS="https://github.com/earlephilhower/arduino-pico/releases/download/5.5.1/package_rp2040_index.json https://github.com/Ameba-AIoT/ameba-arduino-d/raw/dev/Arduino_package/package_realtek_amebad_early_index.json https://dl.espressif.com/dl/package_esp32_index.json"
 
 # Video Game Module uses Raspberry Pi Pico: Flash Size 2MB, CPU Speed 200MHz
 FQBN="rp2040:rp2040:rpipico"
