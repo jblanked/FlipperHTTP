@@ -3,7 +3,7 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2025-12-30
+Updated: 2026-03-20
 
 Change Log:
 - 2024-09-30: Initial commit
@@ -69,6 +69,9 @@ Change Log:
     - Updated readSerialSettings to disconnect before reconnecting with new settings
     - Added [BOARD/NAME] command to get the board name
     - Bumped version to 2.1.4
+- 2026-03-20:
+    - Updated arduino-pico package to 5.5.1
+    - Bumped version to 2.1.5
 */
 #pragma once
 #include "certs.hpp"
@@ -83,7 +86,7 @@ Change Log:
 #include "storage.hpp"
 
 #define BAUD_RATE 115200
-#define FLIPPER_HTTP_VERSION "2.1.4"
+#define FLIPPER_HTTP_VERSION "2.1.5"
 
 class FlipperHTTP
 {
