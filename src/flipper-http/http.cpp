@@ -386,3 +386,172 @@ bool HTTP::stream(const char *method, String url, String payload, const char *he
     return false;
 }
 #endif
+
+bool HTTP::streamUpload(const char *method, String url, size_t fileSize, String contentType, const char *headerKeys[], const char *headerValues[], int headerSize)
+#ifdef BOARD_BW16
+{
+    this->uart->println(F("[ERROR] streamUpload not implemented for BW16."));
+    return false;
+}
+#else
+{
+    // Parse URL into host and path
+    String host, path;
+    int port = 443;
+
+    if (url.startsWith("https://"))
+    {
+        url.remove(0, 8);
+        port = 443;
+    }
+    else if (url.startsWith("http://"))
+    {
+        url.remove(0, 7);
+        port = 80;
+    }
+
+    int slashIdx = url.indexOf('/');
+    if (slashIdx != -1)
+    {
+        host = url.substring(0, slashIdx);
+        path = url.substring(slashIdx);
+    }
+    else
+    {
+        host = url;
+        path = "/";
+    }
+
+    // Connect to the server before signalling ready, so the device
+    // doesn't start sending bytes to an unconnected upload.
+    if (!this->client->connect(host.c_str(), port))
+    {
+        this->client->setInsecure();
+        if (!this->client->connect(host.c_str(), port))
+        {
+            this->uart->println(F("[ERROR] Failed to connect to server for upload."));
+            this->client->setCACert(root_ca);
+            return false;
+        }
+    }
+
+    // Send HTTP request line and headers
+    this->client->print(method);
+    this->client->print(F(" "));
+    this->client->print(path);
+    this->client->println(F(" HTTP/1.1"));
+    this->client->print(F("Host: "));
+    this->client->println(host);
+    this->client->print(F("Content-Type: "));
+    this->client->println(contentType);
+    this->client->print(F("Content-Length: "));
+    this->client->println(fileSize);
+    for (int i = 0; i < headerSize; i++)
+    {
+        this->client->print(headerKeys[i]);
+        this->client->print(F(": "));
+        this->client->println(headerValues[i]);
+    }
+    this->client->println(F("Connection: close"));
+    this->client->println(); // blank line ends headers
+
+    // Signal the UART device that we are ready for raw bytes
+    this->uart->println(F("[FILE/READY]"));
+    this->uart->flush();
+
+    // Stream body: read chunks from UART and write directly to the HTTP connection
+    uint8_t buf[128];
+    size_t remaining = fileSize;
+    unsigned long timeoutStart = millis();
+    const unsigned long chunkTimeout = 5000; // 5 s without new data = abort
+
+    while (remaining > 0)
+    {
+        size_t avail = this->uart->available();
+        if (avail > 0)
+        {
+            size_t toRead = avail < remaining ? avail : remaining;
+            if (toRead > sizeof(buf))
+                toRead = sizeof(buf);
+            size_t bytesRead = this->uart->readBytes(buf, (uint8_t)toRead);
+            this->client->write(buf, bytesRead);
+            remaining -= bytesRead;
+            timeoutStart = millis();
+        }
+        else
+        {
+            if (millis() - timeoutStart > chunkTimeout)
+            {
+                this->uart->println(F("[ERROR] Upload timed out waiting for data."));
+                this->client->stop();
+                this->client->setCACert(root_ca);
+                return false;
+            }
+            delay(1);
+        }
+    }
+
+    // Wait for the server's response headers to arrive
+    unsigned long responseTimeout = millis();
+    while (!this->client->available() && millis() - responseTimeout < 5000)
+    {
+        delay(1);
+    }
+
+    // Parse HTTP status line: "HTTP/1.1 200 OK\r\n"
+    int statusCode = 0;
+    String statusLine = this->client->readStringUntil('\n');
+    statusLine.trim();
+    int sp = statusLine.indexOf(' ');
+    if (sp != -1)
+    {
+        statusCode = statusLine.substring(sp + 1, sp + 4).toInt();
+    }
+
+    // Parse response headers: capture Content-Length, stop at blank line
+    int contentLength = -1;
+    while (this->client->available())
+    {
+        String headerLine = this->client->readStringUntil('\n');
+        headerLine.trim();
+        if (headerLine.length() == 0)
+            break;
+        if (headerLine.startsWith("Content-Length:") || headerLine.startsWith("content-length:"))
+        {
+            contentLength = headerLine.substring(headerLine.indexOf(':') + 1).toInt();
+        }
+    }
+
+    // Stream response body back over UART in chunks
+    uint8_t rbuf[512] = {0};
+    char headerResponse[128];
+    snprintf(headerResponse, sizeof(headerResponse),
+             "[POST/SUCCESS]{\"Status-Code\":%d,\"Content-Length\":%d}", statusCode, contentLength);
+    this->uart->println(headerResponse);
+
+    unsigned long bodyTimeout = millis();
+    while (this->client->connected())
+    {
+        size_t size = this->client->available();
+        if (size)
+        {
+            bodyTimeout = millis();
+            int c = this->client->readBytes(rbuf, size > sizeof(rbuf) ? sizeof(rbuf) : size);
+            this->uart->write(rbuf, c);
+        }
+        else
+        {
+            if (millis() - bodyTimeout > 2000)
+                break;
+            delay(1);
+        }
+    }
+
+    this->client->stop();
+    this->client->setCACert(root_ca);
+    this->uart->flush();
+    this->uart->println();
+    this->uart->println(F("[POST/END]"));
+    return true;
+}
+#endif

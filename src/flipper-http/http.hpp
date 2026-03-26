@@ -28,6 +28,10 @@ public:
     // Streams the response in chunks over UART, returns false if the request failed
     bool stream(const char *method, String url, String payload, const char *headerKeys[], const char *headerValues[], int headerSize);
 
+    // Reads fileSize raw bytes from UART and uploads them as the request body,
+    // then streams the response back over UART. Returns false on failure.
+    bool streamUpload(const char *method, String url, size_t fileSize, String contentType, const char *headerKeys[], const char *headerValues[], int headerSize);
+
 private:
 #ifndef BOARD_BW16
     WiFiClientSecure *client; // WiFiClientSecure object for secure connections
