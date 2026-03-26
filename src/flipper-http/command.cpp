@@ -36,6 +36,8 @@ String commandToString(CommandType command)
         return "[GET/BYTES]";
     case COMMAND_TYPE_POST_BYTES:
         return "[POST/BYTES]";
+    case COMMAND_TYPE_POST_FILE:
+        return "[POST/FILE]";
     case COMMAND_TYPE_PARSE:
         return "[PARSE]";
     case COMMAND_TYPE_PARSE_ARRAY:
@@ -138,6 +140,10 @@ CommandType commandFromString(const String &string)
     if (string.startsWith("[POST/BYTES]"))
     {
         return COMMAND_TYPE_POST_BYTES;
+    }
+    if (string.startsWith("[POST/FILE]"))
+    {
+        return COMMAND_TYPE_POST_FILE;
     }
     if (string.startsWith("[PARSE]"))
     {

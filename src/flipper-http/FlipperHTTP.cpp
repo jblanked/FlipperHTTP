@@ -215,7 +215,7 @@ void FlipperHTTP::loop()
         switch (commandType)
         {
         case COMMAND_TYPE_LIST:
-            this->uart->println(F("[LIST], [PING], [REBOOT], [WIFI/IP], [WIFI/SCAN], [WIFI/SAVE], [WIFI/CONNECT], [WIFI/DISCONNECT], [WIFI/LIST], [GET], [GET/HTTP], [POST/HTTP], [PUT/HTTP], [DELETE/HTTP], [GET/BYTES], [POST/BYTES], [PARSE], [PARSE/ARRAY], [LED/ON], [LED/OFF], [IP/ADDRESS], [WIFI/AP], [VERSION], [DEAUTH], [WIFI/STATUS], [WIFI/SSID], [BOARD/NAME]"));
+            this->uart->println(F("[LIST], [PING], [REBOOT], [WIFI/IP], [WIFI/SCAN], [WIFI/SAVE], [WIFI/CONNECT], [WIFI/DISCONNECT], [WIFI/LIST], [GET], [GET/HTTP], [POST/HTTP], [PUT/HTTP], [DELETE/HTTP], [GET/BYTES], [POST/BYTES], [POST/FILE], [PARSE], [PARSE/ARRAY], [LED/ON], [LED/OFF], [IP/ADDRESS], [WIFI/AP], [VERSION], [DEAUTH], [WIFI/STATUS], [WIFI/SSID], [BOARD/NAME]"));
             break;
         case COMMAND_TYPE_PING:
             this->uart->println("[PONG]");
@@ -748,6 +748,63 @@ void FlipperHTTP::loop()
             if (!this->http->stream("POST", url, payload, headerKeys, headerValues, headerSize))
             {
                 this->uart->println(F("[ERROR] POST request failed or returned empty data."));
+            }
+            break;
+        }
+        case COMMAND_TYPE_POST_FILE:
+        {
+            if (!this->wifi.isConnected() && !this->wifi.connect(loaded_ssid, loaded_pass))
+            {
+                this->uart->println(F("[ERROR] Not connected to Wifi. Failed to reconnect."));
+                this->led.off();
+                return;
+            }
+
+            // Extract the JSON by removing the command part
+            String jsonData = _data.substring(strlen("[POST/FILE]"));
+            jsonData.trim();
+
+            JsonDocument doc;
+            DeserializationError error = deserializeJson(doc, jsonData);
+
+            if (error)
+            {
+                this->uart->print(F("[ERROR] Failed to parse JSON."));
+                this->led.off();
+                return;
+            }
+
+            // Require url and size; content_type is optional (defaults to application/octet-stream)
+            if (!doc["url"] || !doc["size"])
+            {
+                this->uart->println(F("[ERROR] JSON does not contain url or size."));
+                this->led.off();
+                return;
+            }
+            String url = doc["url"];
+            size_t fileSize = doc["size"].as<size_t>();
+            String contentType = doc["content_type"] | "application/octet-stream";
+
+            // Extract optional headers
+            const char *headerKeys[10];
+            const char *headerValues[10];
+            int headerSize = 0;
+
+            if (doc["headers"])
+            {
+                JsonObject headers = doc["headers"];
+                for (JsonPair header : headers)
+                {
+                    headerKeys[headerSize] = header.key().c_str();
+                    headerValues[headerSize] = header.value();
+                    headerSize++;
+                }
+            }
+
+            // Upload: connect, stream bytes from UART to HTTP body, return response
+            if (!this->http->streamUpload("POST", url, fileSize, contentType, headerKeys, headerValues, headerSize))
+            {
+                this->uart->println(F("[ERROR] File upload failed."));
             }
             break;
         }
