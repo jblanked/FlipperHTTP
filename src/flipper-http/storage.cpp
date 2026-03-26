@@ -51,17 +51,6 @@ bool StorageManager::deserialize(JsonDocument &doc, const char *filename)
 #endif
 }
 
-size_t StorageManager::freeHeap()
-{
-#if defined(BOARD_PICO_W) || defined(BOARD_PICO_2W) || defined(BOARD_VGM) || defined(BOARD_PICOCALC_W) || defined(BOARD_PICOCALC_2W)
-    return rp2040.getFreeHeap();
-#elif defined(BOARD_BW16)
-    return os_get_free_heap_size_arduino();
-#else
-    return ESP.getFreeHeap();
-#endif
-}
-
 String StorageManager::read(const char *filename)
 {
     String fileContent = "";

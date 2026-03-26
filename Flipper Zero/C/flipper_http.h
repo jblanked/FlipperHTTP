@@ -104,6 +104,7 @@ extern "C"
         size_t file_buffer_len;                   // Length of the file buffer
         size_t content_length;                    // Length of the content received
         int status_code;                          // HTTP status code
+        bool file_ready;                          // Indicates the board is ready for file upload bytes
     } FlipperHTTP;
 
     /**
@@ -250,6 +251,18 @@ extern "C"
      * @note       The received data will be handled asynchronously via the callback.
      */
     bool flipper_http_websocket_stop(FlipperHTTP *fhttp);
+
+    /**
+     * @brief      Upload a file from the SD card to a URL via POST.
+     * @return     true if all bytes were sent successfully, false otherwise.
+     * @param fhttp The FlipperHTTP context
+     * @param url  The URL to upload to.
+     * @param file_path Full path to the file on the SD card.
+     * @param content_type The MIME content type (e.g. "text/plain").
+     * @param headers Optional JSON headers string, or NULL.
+     * @note       After this returns true, poll fhttp->state for IDLE to know the response is complete.
+     */
+    bool flipper_http_upload_file(FlipperHTTP *fhttp, const char *url, const char *file_path, const char *content_type, const char *headers);
 
 #ifdef __cplusplus
 }

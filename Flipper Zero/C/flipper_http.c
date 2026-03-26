@@ -1541,6 +1541,11 @@ static void flipper_http_rx_callback(const char *line, void *context)
     {
         // FURI_LOG_I(HTTP_TAG, "WiFi disconnected successfully.");
     }
+    else if (strstr(line, "[FILE/READY]") != NULL)
+    {
+        fhttp->file_ready = true;
+        return;
+    }
     else if (strstr(line, "[ERROR]") != NULL)
     {
         FURI_LOG_E(HTTP_TAG, "Received error: %s", line);
@@ -1629,4 +1634,142 @@ bool flipper_http_websocket_stop(FlipperHTTP *fhttp)
         return false;
     }
     return flipper_http_send_data(fhttp, "[SOCKET/STOP]");
+}
+
+/**
+ * @brief      Upload a file from the SD card to a URL via POST.
+ * @return     true if all bytes were sent successfully, false otherwise.
+ * @param fhttp The FlipperHTTP context
+ * @param url  The URL to upload to.
+ * @param file_path Full path to the file on the SD card.
+ * @param content_type The MIME content type (e.g. "text/plain").
+ * @param headers Optional JSON headers string, or NULL.
+ * @note       After this returns true, poll fhttp->state for IDLE to know the response is complete.
+ */
+bool flipper_http_upload_file(FlipperHTTP *fhttp, const char *url, const char *file_path, const char *content_type, const char *headers)
+{
+    if (!fhttp || !url || !file_path)
+    {
+        FURI_LOG_E(HTTP_TAG, "Invalid arguments provided to flipper_http_upload_file.");
+        return false;
+    }
+
+    if (!content_type)
+    {
+        content_type = "application/octet-stream";
+    }
+
+    // Open the file and get its size
+    Storage *storage = furi_record_open(RECORD_STORAGE);
+    File *file = storage_file_alloc(storage);
+
+    if (!storage_file_open(file, file_path, FSAM_READ, FSOM_OPEN_EXISTING))
+    {
+        FURI_LOG_E(HTTP_TAG, "Failed to open file for upload: %s", file_path);
+        storage_file_free(file);
+        furi_record_close(RECORD_STORAGE);
+        return false;
+    }
+
+    uint64_t file_size = storage_file_size(file);
+
+    // Build the [POST/FILE] command
+    char command[512];
+    int ret;
+    if (headers && strlen(headers) > 0)
+    {
+        ret = snprintf(
+            command, sizeof(command),
+            "[POST/FILE]{\"url\":\"%s\",\"size\":%lu,\"content_type\":\"%s\",\"headers\":%s}",
+            url, (unsigned long)file_size, content_type, headers);
+    }
+    else
+    {
+        ret = snprintf(
+            command, sizeof(command),
+            "[POST/FILE]{\"url\":\"%s\",\"size\":%lu,\"content_type\":\"%s\"}",
+            url, (unsigned long)file_size, content_type);
+    }
+
+    if (ret < 0 || ret >= (int)sizeof(command))
+    {
+        FURI_LOG_E(HTTP_TAG, "Failed to format POST/FILE command.");
+        storage_file_close(file);
+        storage_file_free(file);
+        furi_record_close(RECORD_STORAGE);
+        return false;
+    }
+
+    // Reset file_ready flag and set method for response handling
+    fhttp->file_ready = false;
+    fhttp->method = POST;
+
+    // Send the command
+    if (!flipper_http_send_data(fhttp, command))
+    {
+        FURI_LOG_E(HTTP_TAG, "Failed to send POST/FILE command.");
+        storage_file_close(file);
+        storage_file_free(file);
+        furi_record_close(RECORD_STORAGE);
+        return false;
+    }
+
+    // Wait for [FILE/READY] from the board
+    uint32_t timeout = 100; // 10 seconds (100 * 100ms)
+    while (!fhttp->file_ready && timeout > 0)
+    {
+        if (fhttp->state == ISSUE)
+        {
+            FURI_LOG_E(HTTP_TAG, "Board reported an error before file upload.");
+            storage_file_close(file);
+            storage_file_free(file);
+            furi_record_close(RECORD_STORAGE);
+            return false;
+        }
+        furi_delay_ms(100);
+        timeout--;
+    }
+
+    if (!fhttp->file_ready)
+    {
+        FURI_LOG_E(HTTP_TAG, "Timed out waiting for FILE/READY.");
+        storage_file_close(file);
+        storage_file_free(file);
+        furi_record_close(RECORD_STORAGE);
+        return false;
+    }
+
+    // Read file in chunks and send raw bytes over UART
+    uint8_t buf[128];
+    uint64_t remaining = file_size;
+    bool success = true;
+
+    while (remaining > 0)
+    {
+        size_t to_read = remaining < sizeof(buf) ? (size_t)remaining : sizeof(buf);
+        size_t bytes_read = storage_file_read(file, buf, to_read);
+        if (bytes_read == 0)
+        {
+            FURI_LOG_E(HTTP_TAG, "Failed to read from file during upload.");
+            success = false;
+            break;
+        }
+        furi_hal_serial_tx(fhttp->serial_handle, buf, bytes_read);
+        furi_hal_serial_tx_wait_complete(fhttp->serial_handle);
+        remaining -= bytes_read;
+        furi_delay_ms(5); // pacing delay
+    }
+
+    storage_file_close(file);
+    storage_file_free(file);
+    furi_record_close(RECORD_STORAGE);
+
+    if (success)
+    {
+        // The response will arrive as [POST/SUCCESS]...data...[POST/END]
+        // handled by the rx_callback. Set state so the caller can poll.
+        fhttp->state = RECEIVING;
+    }
+
+    return success;
 }

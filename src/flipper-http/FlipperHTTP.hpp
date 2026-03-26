@@ -3,7 +3,7 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2026-03-20
+Updated: 2026-03-26
 
 Change Log:
 - 2024-09-30: Initial commit
@@ -72,21 +72,28 @@ Change Log:
 - 2026-03-20:
     - Updated arduino-pico package to 5.5.1
     - Bumped version to 2.1.5
+- 2026-03-26:
+    - Added command.hpp/cpp to handle all command parsing
+    - Added an HTTP class to handle all HTTP requests and moved the request and stream methods to that class
+    - Added a WebSocket class to handle all WebSocket connections and moved the WebSocket methods to that class
+    - Added [POST/FILE] command to upload files over HTTP and stream the response back over UART
+    - Bumped version to 2.1.6
 */
 #pragma once
 #include "certs.hpp"
 #include "led.hpp"
 #include "uart.hpp"
+#include "http.hpp"
+#include "websocket.hpp"
+#include "storage.hpp"
 #include "wifi_utils.hpp"
 #include <ArduinoJson.h>
 #include <Arduino.h>
-#include <ArduinoHttpClient.h>
 #include <stdint.h>
 #include <string.h>
-#include "storage.hpp"
 
 #define BAUD_RATE 115200
-#define FLIPPER_HTTP_VERSION "2.1.5"
+#define FLIPPER_HTTP_VERSION "2.1.6"
 
 class FlipperHTTP
 {
@@ -96,23 +103,10 @@ public:
     {
     }
 
-    bool loadWiFi(); // Load Wifi settings from storage
-    //
-    String request(
-        const char *method,                   // HTTP method
-        String url,                           // URL to send the request to
-        String payload = "",                  // Payload to send with the request
-        const char *headerKeys[] = nullptr,   // Array of header keys
-        const char *headerValues[] = nullptr, // Array of header values
-        int headerSize = 0                    // Number of headers
-    );
-    //
+    bool loadWiFi();            // Load Wifi settings from storage
     bool saveWiFi(String data); // Save and Load settings to and from storage
-    void setup();
-    void sendLargeMessage(WebSocketClient &ws, String message);                                                                             // Arduino setup function
-    bool streamBytes(const char *method, String url, String payload, const char *headerKeys[], const char *headerValues[], int headerSize); // Stream bytes from server
-    bool readSerialSettings(String receivedData, bool connectAfterSave);                                                                    // Read the serial data and save the settings
-    void loop();                                                                                                                            // Main loop for flipper-http.ino that handles all of the commands
+    void setup();               // Arduino setup function
+    void loop();                // Main loop for flipper-http.ino that handles all of the commands
 private:
     char loaded_ssid[64] = {0}; // Variable to store SSID
     char loaded_pass[64] = {0}; // Variable to store password
@@ -132,6 +126,9 @@ private:
 #endif
     WiFiUtils wifi;         // WiFiUtils object to handle WiFi connections
     StorageManager storage; // StorageManager object to handle storage operations
+    HTTP *http;             // HTTP object to handle HTTP requests
+    WebSocket *websocket;   // WebSocket object to handle WebSocket connections
 };
 
 const PROGMEM char settingsFilePath[] = "/flipper-http.json"; // Path to the settings file in the SPIFFS file system
+const PROGMEM char ledStateFilePath[] = "/led.txt";           // Path to the LED state file in the SPIFFS file system

@@ -1,0 +1,41 @@
+#pragma once
+#include <Arduino.h>
+
+typedef enum
+{
+    COMMAND_TYPE_UNKNOWN = -1,
+    COMMAND_TYPE_LIST = 0,        // [LIST]
+    COMMAND_TYPE_PING,            // [PING]
+    COMMAND_TYPE_REBOOT,          // [REBOOT]
+    COMMAND_TYPE_WIFI_IP,         // [WIFI/IP]
+    COMMAND_TYPE_WIFI_SCAN,       // [WIFI/SCAN]
+    COMMAND_TYPE_WIFI_SAVE,       // [WIFI/SAVE]
+    COMMAND_TYPE_WIFI_CONNECT,    // [WIFI/CONNECT]
+    COMMAND_TYPE_WIFI_DISCONNECT, // [WIFI/DISCONNECT]
+    COMMAND_TYPE_WIFI_LIST,       // [WIFI/LIST]
+    COMMAND_TYPE_GET,             // [GET]
+    COMMAND_TYPE_GET_HTTP,        // [GET/HTTP]
+    COMMAND_TYPE_POST_HTTP,       // [POST/HTTP]
+    COMMAND_TYPE_PUT_HTTP,        // [PUT/HTTP]
+    COMMAND_TYPE_DELETE_HTTP,     // [DELETE/HTTP]
+    COMMAND_TYPE_GET_BYTES,       // [GET/BYTES]
+    COMMAND_TYPE_POST_BYTES,      // [POST/BYTES]
+    COMMAND_TYPE_POST_FILE,       // [POST/FILE]
+    COMMAND_TYPE_PARSE,           // [PARSE]
+    COMMAND_TYPE_PARSE_ARRAY,     // [PARSE/ARRAY]
+    COMMAND_TYPE_LED_ON,          // [LED/ON]
+    COMMAND_TYPE_LED_OFF,         // [LED/OFF]
+    COMMAND_TYPE_IP_ADDRESS,      // [IP/ADDRESS]
+    COMMAND_TYPE_WIFI_AP,         // [WIFI/AP]
+    COMMAND_TYPE_VERSION,         // [VERSION]
+    COMMAND_TYPE_DEAUTH,          // [DEAUTH]
+    COMMAND_TYPE_DEAUTH_STOP,     // [DEAUTH/STOP]
+    COMMAND_TYPE_WIFI_STATUS,     // [WIFI/STATUS]
+    COMMAND_TYPE_WIFI_SSID,       // [WIFI/SSID]
+    COMMAND_TYPE_BOARD_NAME,      // [BOARD/NAME]
+    COMMAND_TYPE_SOCKET_START,    // [SOCKET/START]
+    COMMAND_TYPE_SOCKET_STOP,     // [SOCKET/STOP]
+} CommandType;
+
+String commandToString(CommandType command);
+CommandType commandFromString(const String &string);

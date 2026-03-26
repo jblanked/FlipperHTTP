@@ -14,7 +14,6 @@ class StorageManager
 public:
     bool begin();
     bool deserialize(JsonDocument &doc, const char *filename);
-    size_t freeHeap();
     String read(const char *filename);
     bool serialize(JsonDocument &doc, const char *filename);
     bool write(const char *filename, const char *data);
