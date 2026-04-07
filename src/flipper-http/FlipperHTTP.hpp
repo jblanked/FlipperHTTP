@@ -3,7 +3,7 @@ Author: JBlanked
 Github: https://github.com/jblanked/FlipperHTTP
 Info: This library is a wrapper around the HTTPClient library and is used to communicate with the FlipperZero over serial.
 Created: 2024-09-30
-Updated: 2026-03-26
+Updated: 2026-04-07
 
 Change Log:
 - 2024-09-30: Initial commit
@@ -78,6 +78,11 @@ Change Log:
     - Added a WebSocket class to handle all WebSocket connections and moved the WebSocket methods to that class
     - Added [POST/FILE] command to upload files over HTTP and stream the response back over UART
     - Bumped version to 2.1.6
+- 2026-04-07:
+    - Replaced local WiFiClient instance with a class instance to fix WebSocket crash
+    - Improved WebSocket error handling
+    - Bumped version to 2.1.7
+
 */
 #pragma once
 #include "certs.hpp"
@@ -93,7 +98,7 @@ Change Log:
 #include <string.h>
 
 #define BAUD_RATE 115200
-#define FLIPPER_HTTP_VERSION "2.1.6"
+#define FLIPPER_HTTP_VERSION "2.1.7"
 
 class FlipperHTTP
 {
