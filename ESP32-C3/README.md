@@ -7,7 +7,7 @@
 6. Navigate to `SD Card/apps_data/esp_flasher/`. If the folder doesn’t exist, create it yourself or run the ESP Flasher app once.
 7. Drag all three bin files you downloaded earlier into the directory.
 8. Disconnect your Flipper from your computer then turn off your Flipper.
-9. Connect your ESP32-C3 into the Flipper then turn on your Flipper. (Optionally, turn on your Flipper first. Then, hold the `BOOT` button while connecting your ESP32-C3. If you do this, when you get to step 11, you can skip the `Reset Board` and `Enter Bootloader` steps.)
+9. Connect your ESP32-C3 into the Flipper then turn on your Flipper. (Optionally, turn on your Flipper first. Then, hold the `BOOT` button while connecting your ESP32-C3. You may also need to briefly hold the `EN/Reset` button before releasing the `BOOT` button. If you do this, when you get to step 11, you can skip the `Reset Board` and `Enter Bootloader` steps.)
 10. Open the ESP Flasher app on your Flipper, it should be located in the `Apps->GPIO` folder from the main menu. 
 11. In the ESP Flasher app, select the following options:
     - `Reset Board`: wait a few seconds, then go back.
